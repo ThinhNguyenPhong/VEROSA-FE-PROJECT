@@ -21,7 +21,7 @@ const Album = () => {
 
   return (
     <div
-      className="h-screen w-screen fixed top-0 left-0 pt-16 bg-gradient-to-b from-pink-100/80 to-white relative overflow-hidden"
+      className="h-screen overflow-y-auto w-screen fixed top-0 left-0 pt-16 bg-gradient-to-b from-pink-100/80 to-white relative overflow-hidden"
       style={{
         backgroundImage:
           'url(https://images.unsplash.com/photo-1549429712-4ee4515efd9b?auto=format&fit=crop&w=1500&q=80)',
@@ -31,27 +31,26 @@ const Album = () => {
         filter: 'brightness(0.98)',
       }}
     >
-      <div className="w-full px-4 py-16 bg-white/70 backdrop-blur-sm">
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-pink-600 mb-6 animate-fade-in-down">
+      <div className="w-full px-4 py-16 bg-[#FFFFFF]/70 backdrop-blur-sm">
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 animate-fade-in-down" style={{ color: '#FFCC66' }}>
           {t('album.title', 'Our Beauty Album')}
         </h1>
-        <p className="max-w-2xl mx-auto text-lg text-center text-gray-700 mb-12 animate-fade-in-up">
+        <p className="max-w-2xl mx-auto text-lg text-center mb-12 animate-fade-in-up" style={{ color: '#FFFFFF' }}>
           {t('album.description', 'Explore our collection of beautiful moments and transformations.')}
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {albumImages.map((image, idx) => (
             <div
               key={idx}
-              className="relative group overflow-hidden rounded-lg shadow-xl animate-fade-in-up transform hover:scale-105 transition-all duration-300"
-              style={{ animationDelay: `${idx * 0.05}s` }}
+              className="relative group overflow-hidden rounded-lg shadow-xl animate-fade-in-up transform hover:scale-105 transition-all duration-300" style={{ backgroundColor: '#FFCC66', animationDelay: `${idx * 0.05}s` }}
             >
               <img
                 src={image}
                 alt={`Album Image ${idx + 1}`}
                 className="w-full h-48 object-cover group-hover:opacity-80 transition-opacity duration-300"
               />
-              <div className="absolute inset-0 bg-pink-600 bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <p className="text-white text-lg font-semibold">{t('album.viewDetail', 'View')}</p>
+              <div className="absolute inset-0 bg-[#FFFFFF] bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <p className="text-lg font-semibold" style={{ color: '#FFCC66' }}>{t('album.viewDetail', 'View')}</p>
               </div>
             </div>
           ))}

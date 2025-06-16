@@ -6,7 +6,7 @@ const Contact = () => {
 
   return (
     <div
-      className="h-screen w-screen fixed top-0 left-0 pt-16 bg-gradient-to-b from-[#FFCC66]/20 to-white relative overflow-hidden"
+      className="h-screen w-screen overflow-y-auto fixed top-0 left-0 pt-16 bg-gradient-to-b from-[#FFCC66]/20 to-white relative overflow-hidden"
       style={{
         backgroundImage:
           'url(https://images.unsplash.com/photo-1549429712-4ee4515efd9b?auto=format&fit=crop&w=1500&q=80)',

@@ -39,7 +39,7 @@ const Blog = () => {
 
   return (
     <div
-      className="h-screen w-screen fixed top-0 left-0 pt-16 bg-gradient-to-b from-pink-100/80 to-white relative overflow-hidden"
+      className="h-screen overflow-y-auto w-screen fixed top-0 left-0 pt-16 bg-gradient-to-b from-pink-100/80 to-white relative overflow-hidden"
       style={{
         backgroundImage:
           'url(https://images.unsplash.com/photo-1549429712-4ee4515efd9b?auto=format&fit=crop&w=1500&q=80)',
@@ -49,8 +49,8 @@ const Blog = () => {
         filter: 'brightness(0.98)',
       }}
     >
-      <div className="w-full px-4 py-16 bg-white/70 backdrop-blur-sm">
-        <h1 className="text-4xl md:text-5xl font-bold text-center text-pink-600 mb-6 animate-fade-in-down">
+      <div className="w-full px-4 py-16 bg-[#FFFFFF]/70 backdrop-blur-sm">
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-6 animate-fade-in-down" style={{ color: '#FFCC66' }}>
           {t('blog.title', 'Our Blog')}
         </h1>
         <p className="max-w-2xl mx-auto text-lg text-center text-gray-700 mb-12 animate-fade-in-up">
@@ -60,16 +60,15 @@ const Blog = () => {
           {blogPosts.map((post, idx) => (
             <div
               key={idx}
-              className="bg-white/90 p-6 rounded-2xl shadow-2xl flex flex-col items-start animate-fade-in-up transform hover:scale-105 transition-all duration-300 cursor-pointer"
-              style={{ animationDelay: `${idx * 0.05}s` }}
+              className="p-6 rounded-2xl shadow-2xl flex flex-col items-start animate-fade-in-up transform hover:scale-105 transition-all duration-300 cursor-pointer" style={{ backgroundColor: '#FFCC66', animationDelay: `${idx * 0.05}s` }}
             >
               <img
                 src={post.img}
                 alt={post.title}
                 className="w-full h-48 object-cover rounded-lg shadow mb-4"
               />
-              <h2 className="text-xl font-semibold text-pink-600 mb-2 text-left">{t(`blog.post${idx + 1}.title`, post.title)}</h2>
-              <p className="text-gray-600 text-left">{t(`blog.post${idx + 1}.excerpt`, post.excerpt)}</p>
+              <h2 className="text-xl font-semibold mb-2 text-left" style={{ color: '#FFFFFF' }}>{t(`blog.post${idx + 1}.title`, post.title)}</h2>
+              <p className="text-left" style={{ color: '#FFFFFF' }}>{t(`blog.post${idx + 1}.excerpt`, post.excerpt)}</p>
             </div>
           ))}
         </div>
