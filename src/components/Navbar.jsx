@@ -13,17 +13,17 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 bg-white shadow-lg z-50">
       <div className="w-full px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="text-2xl font-bold text-pink-600">
+          <Link to="/" className="text-2xl font-bold" style={{ color: '#CD853F' }}>
             Beauty Care
           </Link>
           
           <div className="hidden md:flex space-x-8">
-            <Link to="/" className="text-gray-600 hover:text-pink-600">{t('nav.home')}</Link>
-            <Link to="/introduction" className="text-gray-600 hover:text-pink-600">{t('nav.introduction')}</Link>
-            <Link to="/services" className="text-gray-600 hover:text-pink-600">{t('nav.services')}</Link>
-            <Link to="/album" className="text-gray-600 hover:text-pink-600">{t('nav.album')}</Link>
-            <Link to="/blog" className="text-gray-600 hover:text-pink-600">{t('nav.blog')}</Link>
-            <Link to="/contact" className="text-gray-600 hover:text-pink-600">{t('nav.contact')}</Link>
+            <Link to="/" className="text-gray-600 hover:text-pink-600" style={{ color: '#CD853F' }}>{t('nav.home')}</Link>
+            <Link to="/introduction" className="text-gray-600 hover:text-pink-600" style={{ color: '#CD853F' }}>{t('nav.introduction')}</Link>
+            <Link to="/services" className="text-gray-600 hover:text-pink-600" style={{ color: '#CD853F' }}>{t('nav.services')}</Link>
+            <Link to="/album" className="text-gray-600 hover:text-pink-600" style={{ color: '#CD853F' }}>{t('nav.album')}</Link>
+            <Link to="/blog" className="text-gray-600 hover:text-pink-600" style={{ color: '#CD853F' }}>{t('nav.blog')}</Link>
+            <Link to="/contact" className="text-gray-600 hover:text-pink-600" style={{ color: '#CD853F' }}>{t('nav.contact')}</Link>
           </div>
 
           <div className="flex items-center space-x-4">
