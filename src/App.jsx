@@ -6,6 +6,7 @@ import Introduction from './pages/Introduction';
 import Services from './pages/Services';
 import Album from './pages/Album';
 import Blog from './pages/Blog';
+import BlogDetail from './pages/BlogDetail';
 import Contact from './pages/Contact';
 import './i18n';
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/album" element={<Album />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </main>

@@ -1,36 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-
-const services = [
-  {
-    title: 'Facial Treatments',
-    img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    title: 'Massage Therapy',
-    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    title: 'Hair Styling',
-    img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    title: 'Nail Care',
-    img: 'https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    title: 'Makeup Services',
-    img: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80',
-  },
-  {
-    title: 'Spa Packages',
-    img: 'https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&w=400&q=80',
-  },
-];
+import { getAllServices } from '../apis/servicesApi/servicesApi';
 
 const Services = () => {
   const { t } = useTranslation();
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchServices() {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getAllServices();
+        setServices(data);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch services');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchServices();
+  }, []);
 
   return (
     <div
@@ -52,32 +45,50 @@ const Services = () => {
           {t('services.description')}
         </p>
 
+        {/* Loading and Error States */}
+        {loading && (
+          <div className="text-center text-lg text-gray-500 mb-8">Loading services...</div>
+        )}
+        {error && (
+          <div className="text-center text-lg text-red-500 mb-8">{error}</div>
+        )}
+
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
-          {services.map((service, idx) => (
-            <div
-              key={service.title}
-              className="bg-white/95 p-6 rounded-2xl shadow-2xl flex flex-col items-center animate-fade-in-up transform hover:scale-105 transition-transform duration-300"
-              style={{ animationDelay: `${idx * 0.1}s` }}
-            >
-              <img src={service.img} alt={service.title} className="w-28 h-28 object-cover rounded-full shadow mb-4 border-4 border-[#FFCC66]" />
-              <h2 className="text-xl font-semibold text-[#FFCC66] mb-2 text-center">{t(`services.${service.title}.title`)}</h2>
-              <p className="text-gray-600 text-center mb-4">{t(`services.${service.title}.desc`)}</p>
-              <div className="w-full mt-4">
-                <h3 className="text-lg font-semibold text-[#FFCC66] mb-2">{t(`services.${service.title}.details.title`)}</h3>
-                <ul className="space-y-2 mb-4">
-                  {t(`services.${service.title}.details.items`, { returnObjects: true }).map((detail, index) => (
-                    <li key={index} className="text-gray-600 flex items-center">
-                      <span className="text-[#FFCC66] mr-2">•</span>
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-[#FFCC66] font-semibold text-center mt-4">{t(`services.${service.title}.price`)}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {!loading && !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mb-16">
+            {services.map((service, idx) => {
+              const name = service.name || service.title || '';
+              const description = service.description || '';
+              const price = service.price !== undefined ? service.price : '';
+              const imageUrl = service.imageUrl || service.img || service.image || 'https://via.placeholder.com/112';
+              const createdAt = service.createdAt;
+              return (
+                <div
+                  key={service.id || name || idx}
+                  className="bg-white/95 p-8 rounded-3xl shadow-3xl flex flex-col items-center animate-fade-in-up transform hover:scale-105 transition-transform duration-300 group"
+                  style={{ animationDelay: `${idx * 0.1}s` }}
+                >
+                  <div className="relative mb-6">
+                    <img
+                      src={imageUrl}
+                      alt={name}
+                      className="w-44 h-44 object-cover rounded-2xl shadow-2xl border-4 border-[#FFCC66] transition-transform duration-300 group-hover:scale-110"
+                      style={{ background: '#f8f8f8' }}
+                    />
+                  </div>
+                  <h2 className="text-2xl font-bold text-[#FFCC66] mb-3 text-center drop-shadow-lg">{name}</h2>
+                  <p className="text-gray-700 text-base text-center mb-4 px-2">{description}</p>
+                  {createdAt && (
+                    <p className="text-gray-400 text-xs mb-2 italic">{`Created at: ${new Date(createdAt).toLocaleString()}`}</p>
+                  )}
+                  <div className="w-full mt-4">
+                    <p className="text-[#FFCC66] font-bold text-xl text-center mt-4 drop-shadow">{typeof price === 'number' ? price.toLocaleString() + ' VND' : price}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Special Offers Section */}
         <div className="max-w-7xl mx-auto mb-16">
