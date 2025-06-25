@@ -1,41 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getAllBlogPosts } from '../apis/blogApi/blogApi';
 
-const blogPosts = [
-  {
-    title: 'Skincare Routine for Glowing Skin',
-    excerpt: 'Discover the essential steps for a radiant complexion.',
-    img: 'https://images.unsplash.com/photo-1556910609-a78b5c90b62d?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    title: 'Hair Care Tips for Healthy Locks',
-    excerpt: 'Learn how to keep your hair strong and shiny.',
-    img: 'https://images.unsplash.com/photo-1603572849553-61a7b4582f3a?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    title: 'The Benefits of Regular Massages',
-    excerpt: 'Explore how therapeutic massages can improve your well-being.',
-    img: 'https://images.unsplash.com/photo-1544111306-be592925b42d?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    title: 'Makeup Trends for Every Season',
-    excerpt: 'Stay up-to-date with the latest beauty looks.',
-    img: 'https://images.unsplash.com/photo-1620202720182-385038c92a9b?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    title: 'Nail Art Inspirations',
-    excerpt: 'Get creative with these stunning nail designs.',
-    img: 'https://images.unsplash.com/photo-1506197603-d0285097f48b?auto=format&fit=crop&w=600&q=80',
-  },
-  {
-    title: 'Diving Deep into Spa Treatments',
-    excerpt: 'Understand the healing power of spa therapies.',
-    img: 'https://images.unsplash.com/photo-1574867140809-54316a73562a?auto=format&fit=crop&w=600&q=80',
-  },
-];
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const Blog = () => {
   const { t } = useTranslation();
+  const query = useQuery();
+  const navigate = useNavigate();
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const location = useLocation();
+  const blog = location.state;
+
+  // Lấy params từ URL nếu có
+  const params = {
+    title: query.get('title') || '',
+    type: query.get('type') || '',
+    authorId: query.get('authorId') || '',
+    sort_by: query.get('sort_by') || '',
+    sort_desc: query.get('sort_desc') || '',
+    page_number: query.get('page_number') || 1,
+    page_size: query.get('page_size') || 10,
+  };
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const queryString = Object.entries(params)
+          .filter(([_, v]) => v !== '' && v !== null && v !== undefined)
+          .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+          .join('&');
+        const data = await getAllBlogPosts(queryString);
+        console.log('Blog data:', data);
+        setBlogPosts(data);
+      } catch (err) {
+        setError(err.message || 'Failed to fetch blogs');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBlogs();
+    // eslint-disable-next-line
+  }, [window.location.search]); // Gọi lại khi URL thay đổi
 
   return (
     <div
@@ -56,21 +69,24 @@ const Blog = () => {
         <p className="max-w-2xl mx-auto text-lg text-center text-gray-700 mb-12 animate-fade-in-up">
           {t('blog.description', 'Stay informed with our latest beauty insights, tips, and trends.')}
         </p>
+        {loading && <div className="text-center text-lg text-gray-500 mb-8">Loading blogs...</div>}
+        {error && <div className="text-center text-lg text-red-500 mb-8">{error}</div>}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {blogPosts.map((post, idx) => (
+          {blogPosts && blogPosts.length > 0 ? blogPosts.map((post, idx) => (
             <div
-              key={idx}
+              key={post.id || idx}
               className="p-6 rounded-2xl shadow-2xl flex flex-col items-start animate-fade-in-up transform hover:scale-105 transition-all duration-300 cursor-pointer" style={{ backgroundColor: '#FFCC66', animationDelay: `${idx * 0.05}s` }}
+              onClick={() => navigate(`/blog/${post.id || idx}`, { state: post })}
             >
               <img
-                src={post.img}
+                src={post.img || post.imageUrl || 'https://via.placeholder.com/600x200'}
                 alt={post.title}
                 className="w-full h-48 object-cover rounded-lg shadow mb-4"
               />
-              <h2 className="text-xl font-semibold mb-2 text-left" style={{ color: '#FFFFFF' }}>{t(`blog.post${idx + 1}.title`, post.title)}</h2>
-              <p className="text-left" style={{ color: '#FFFFFF' }}>{t(`blog.post${idx + 1}.excerpt`, post.excerpt)}</p>
+              <h2 className="text-xl font-semibold mb-2 text-left" style={{ color: '#FFFFFF' }}>{post.title}</h2>
+              <p className="text-left" style={{ color: '#FFFFFF' }}>{post.excerpt || post.description}</p>
             </div>
-          ))}
+          )) : <div className="col-span-3 text-center text-gray-500">No blogs found.</div>}
         </div>
       </div>
       <style>{`
